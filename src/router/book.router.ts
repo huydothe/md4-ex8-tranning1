@@ -1,6 +1,7 @@
 import {Router} from "express";
 import {Book} from "../schemas/book.model";
 import multer from 'multer';
+import {Author} from "../schemas/author.model";
 
 const bookRouters = Router();
 const upload = multer();
@@ -12,17 +13,20 @@ bookRouters.get('/create',(req, res)=>{
 
 bookRouters.post('/create',upload.none(),async (req,res)=>{
     try{
-        // const bookNew = new Book(req.body);
-        // const book = await bookNew.save();
+        const authorNew = new Author({
+            name:req.body.author
+        })
 
         const bookNew = new Book({
             title: req.body.title,
             description: req.body.description,
-            author: req.body.author,
+            author: authorNew
         })
 
         bookNew.keywords.push({keywords: req.body.keywords});
-        const book = await bookNew.save()
+        const p1 = bookNew.save();
+        const p2 = authorNew.save();
+        let [author,book] = await Promise.all([p1,p2]);
 
         if(book){
             res.redirect("/book/")
@@ -38,7 +42,10 @@ bookRouters.post('/create',upload.none(),async (req,res)=>{
 
 bookRouters.get('/',async (req,res)=>{
     try{
-        const book = await Book.find();
+        const book = await Book.find().populate({
+            path:"author",
+            select:"name"
+        });
         res.render('listBook',{books:book});
     }catch (err){
         res.status(500).json({

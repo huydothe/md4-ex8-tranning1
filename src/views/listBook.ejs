@@ -27,7 +27,7 @@
             <td><%= index +1%></td>
             <td><%= item.title%></td>
             <td><%= item.description%></td>
-            <td><%= item.author%></td>
+            <td><%= item.author.name%></td>
             <td><%= item.keywords%></td>
             <td><a href="/book/update/<%=item.id%>" class="btn btn-primary">Update</a></td>
             <td><a href="/book/delete/<%=item.id%>" class="btn btn-danger">Delete</a></td>

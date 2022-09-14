@@ -8,7 +8,7 @@ const keywordsSchema = new mongoose_1.Schema({
 const bookSchema = new mongoose_1.Schema({
     title: String,
     description: String,
-    author: String,
+    author: { type: mongoose_1.Schema.Types.ObjectId, ref: "Author" },
     keywords: [keywordsSchema]
 });
 const Book = (0, mongoose_1.model)('Book', bookSchema);

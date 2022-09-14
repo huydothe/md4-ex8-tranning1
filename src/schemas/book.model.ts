@@ -3,7 +3,7 @@ import {Schema,model} from 'mongoose';
 interface IBook{
     title : string;
     description : string;
-    author : string;
+    author : any;
     keywords: object[];
 }
 
@@ -14,7 +14,7 @@ const keywordsSchema = new Schema({
 const bookSchema = new Schema<IBook>({
     title : String,
     description : String,
-    author : String,
+    author: { type:Schema.Types.ObjectId, ref: "Author" },
     keywords:[keywordsSchema]
 });
 
