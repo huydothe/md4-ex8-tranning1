@@ -20,10 +20,23 @@ bookRouters.post('/create',upload.none(),async (req,res)=>{
         const bookNew = new Book({
             title: req.body.title,
             description: req.body.description,
-            author: authorNew
+            author: authorNew,
+            // keywords:[{keyword: req.body.keywords}]
+        })
+        // bookNew.keywords.forEach(e=>{
+        //     console.log(e.keywords);
+        // })
+        // bookNew.keywords.forEach(e=>{
+
+        //     console.log(e.keyword);
+        // });
+        bookNew.keywords.push({ keywords: req.body.keywords });
+        // console.log(bookNew.keywords)
+        bookNew.keywords.forEach(e=>{
+            // @ts-ignore
+            console.log(e.keywords);
         })
 
-        bookNew.keywords.push({keywords: req.body.keywords});
         const p1 = bookNew.save();
         const p2 = authorNew.save();
         let [author,book] = await Promise.all([p1,p2]);
@@ -42,10 +55,32 @@ bookRouters.post('/create',upload.none(),async (req,res)=>{
 
 bookRouters.get('/',async (req,res)=>{
     try{
-        const book = await Book.find().populate({
+        let query = {};
+
+        if(req.query.keywords && req.query.keywords !== ''){
+            let keywordFind = req.query.keywords || '';
+            query = {
+                "keywords.keywords" : {
+                    $regex : keywordFind
+                }
+            }
+        }
+        if(req.query.author && req.query.author !== ''){
+            let authorFind = req.query.author || '';
+            let author =await Author.findOne({name:{$regex : authorFind}});
+            query = {
+                ...query, author : author
+            }
+        }
+
+        const book = await Book.find(query).populate({
             path:"author",
             select:"name"
+        }).populate({
+            path:"keywords",
+            select: "keywords"
         });
+        console.log(book[0])
         res.render('listBook',{books:book});
     }catch (err){
         res.status(500).json({

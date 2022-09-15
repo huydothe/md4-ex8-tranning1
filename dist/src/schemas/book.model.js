@@ -5,6 +5,7 @@ const mongoose_1 = require("mongoose");
 const keywordsSchema = new mongoose_1.Schema({
     keywords: String
 });
+const keywords = (0, mongoose_1.model)('keyword', keywordsSchema);
 const bookSchema = new mongoose_1.Schema({
     title: String,
     description: String,

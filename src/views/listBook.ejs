@@ -8,8 +8,24 @@
 </head>
 <body>
 
+
 <table class="table">
     <a href="/book/create" class="btn btn-primary">Create new book</a>
+    <br>
+    <form action="/book/" method="GET">
+        <label>Keyword:</label>
+        <input type="text" id="keyword" name="keywords">
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary" >Search</button>
+        </div>
+    </form>
+    <form action="/book/" method="GET">
+        <label>Author:</label>
+        <input type="text" id="keyword" name="keywords">
+        <div class="form-group">
+            <button type="submit" class="btn btn-warning" >Search</button>
+        </div>
+    </form>
     <thead>
     <tr>
         <th scope="col">#</th>
@@ -28,7 +44,9 @@
             <td><%= item.title%></td>
             <td><%= item.description%></td>
             <td><%= item.author.name%></td>
-            <td><%= item.keywords%></td>
+            <% item.keywords.forEach(ej=>{%>
+                <td><%= ej.keywords%></td>
+            <%})%>
             <td><a href="/book/update/<%=item.id%>" class="btn btn-primary">Update</a></td>
             <td><a href="/book/delete/<%=item.id%>" class="btn btn-danger">Delete</a></td>
         </tr>
